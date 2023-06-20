@@ -1,7 +1,8 @@
-import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Vector3, Euler } from 'three';
 import { SceneService } from '../scene.service';
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
+import { data } from './data';
 
 type ACTION = {
   ACTION_NAME : string,
@@ -15,37 +16,15 @@ type ACTION = {
   templateUrl: './media-player.component.html',
   styleUrls: ['./media-player.component.scss']
 })
-export class MediaPlayerComponent implements OnInit {
+export class MediaPlayerComponent implements OnInit, AfterViewInit{
 
   @ViewChild('container')
   set container(container: ElementRef) {
-    if (!this.sceneService.scene) {
       this.sceneService.initialize(container.nativeElement);
-    }
   }
-  modelData = [
-    {
-      "id": "kuka",
-      "name": "Kuka Robot",
-      "position": { "x": 2.5391923523937576, "y": 0, "z": 0 },
-      "scale": { "x": 0.01, "y": 0.01, "z": 0.01 },
-      "rotation": { "x": -1.5707963267948963, "y": 0, "z": 0 }
-    },
-    {
-      "id": "plane",
-      "name": "Plane",
-      "position": { "x": 0.012838000420733131, "y": 0, "z": 0 },
-      "scale": { "x": 1, "y": 1, "z": 1 },
-      "rotation": { "x": 1.5707963267948966, "y": 0, "z": 0 }
-    },
-    {
-      "id": "kuka",
-      "name": "Kuka Robot",
-      "position": { "x": -2.0360265965806397, "y": 0, "z": 0 },
-      "scale": { "x": 0.01, "y": 0.01, "z": 0.01 },
-      "rotation": { "x": -1.5707963267948963, "y": 0, "z": 0 }
-    }
-  ]
+
+  
+  modelData = data;
 
   constructor(@Inject(SceneService) private sceneService: SceneService, private renderer: Renderer2) { }
 
@@ -53,6 +32,7 @@ export class MediaPlayerComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    console.log("TO")
     this.generateModel();
     document.body.appendChild( VRButton.createButton( this.sceneService.renderer) );
     this.sceneService.renderer.xr.enabled = true;
@@ -60,6 +40,8 @@ export class MediaPlayerComponent implements OnInit {
 
   generateModel() {
     this.modelData.map(x => {
+
+      console.log(x);
       switch (x.id) {
         case "kuka": {
           this.sceneService.createModels("assets/kuka.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Kuka Robot", "kuka").then(model => {
@@ -79,8 +61,29 @@ export class MediaPlayerComponent implements OnInit {
           // this.sceneService.gridHelper.remove();
           this.sceneService.orbitControls.enabled = true;
           console.log(this.sceneService.scene)
-          break;
-        }
+        } break;
+
+        case "conveyor": {
+          this.sceneService.createModels("assets/conveyor.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Conveyor", "conveyor", new Euler(x.rotation.x,x.rotation.y,x.rotation.z, 'XYZ')).then(model => {
+            // this.models.push(model as Object3D);
+            this.sceneService.transformControls.detach();
+            // this.sceneService.gridHelper.remove();
+            this.sceneService.orbitControls.enabled = true;
+          }).catch(err => {
+            console.log(err);
+          })
+        }; break;
+
+        case "conveyor2": {
+          this.sceneService.createModels("assets/conveyor2.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Curved Conveyor", "conveyor2", new Euler(x.rotation.x,x.rotation.y,x.rotation.z, 'XYZ')).then(model => {
+            // this.models.push(model as Object3D);
+            this.sceneService.transformControls.detach();
+            // this.sceneService.gridHelper.remove();
+            this.sceneService.orbitControls.enabled = true;
+          }).catch(err => {
+            console.log(err);
+          })
+        }; break;
 
         default: break;
       }

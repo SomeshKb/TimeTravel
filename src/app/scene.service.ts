@@ -118,7 +118,7 @@ export class SceneService {
 
   // GEOMETRY
 
-  public createModels = (modelPath: string, modelPosition: Vector3, modelScale: Vector3, modelName: string, modelId: string) => {
+  public createModels = (modelPath: string, modelPosition: Vector3, modelScale: Vector3, modelName: string, modelId: string, modelRotation?: Euler) => {
     return new Promise((resolve, reject) => {
 
       this.loader = new GLTFLoader(this.loadingManager);
@@ -127,6 +127,12 @@ export class SceneService {
         model.position.copy(modelPosition);
         model.scale.copy(modelScale);
         model.userData = { id: modelId, name: modelName }
+
+        if(modelRotation){
+          model.rotation.copy(modelRotation);
+        }
+
+
         const animation = gltf.animations[0];
 
         if (animation) {

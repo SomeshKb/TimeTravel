@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
-$backgroundColor: #EEE9DA;
+$backgroundColor: #212A3E;
+$headerColor: #394867;
+$primaryColor: #394867;
+$secondaryColor : #212A3E;
+$lightColor : #F1F6F9;
+$textColor : #F1F6F9;
+$borderColor : #2f85b39d;
 
 html,
 body {
@@ -30,13 +36,6 @@ body {
 .obit-controls-gizmo {
     position: absolute;
 }
-
-$headerColor: #2f84b3;
-$primaryColor: #6096B4;
-$secondaryColor : #93BFCF;
-$lightColor : #BDCDD6;
-$textColor : #ffffff;
-$borderColor : #2f85b39d;
 
 .container {
     width: 100%;
@@ -71,7 +70,7 @@ $borderColor : #2f85b39d;
 
         .action-list {
             width: 27%;
-            color: $headerColor;
+            color: $textColor;
             font-size: 20px;
             text-align: center;
             border: 1px solid $borderColor;
@@ -84,7 +83,7 @@ $borderColor : #2f85b39d;
                 text-align: left;
                 font-weight: 300;
                 background-color: $primaryColor;
-                color: white;
+                color: $textColor;
                 margin: 2px 0px;
                 border-radius: 4px;
             }
@@ -100,7 +99,7 @@ $borderColor : #2f85b39d;
         align-items: center;
 
         .picker-label {
-            color: $headerColor;
+            color: $textColor;
 
             .date-picker {
                 margin: 10px;
@@ -111,7 +110,7 @@ $borderColor : #2f85b39d;
                 border: none;
                 border-radius: 4px;
                 font-size: 16px;
-                color: $headerColor;
+                color: $textColor;
                 background: hsla(0, 0%, 100%, 0);
                 border-color: #ffffff;
                 box-shadow: 0 0 5px rgba(121, 121, 121, 0.5);
