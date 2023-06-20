@@ -1,0 +1,58 @@
+<div class="container">
+    <div class="selection-tab">
+        <button  mat-button color="primary" class="select-workshop">Select Workshop</button>
+        <button  mat-button color="primary" class="select-floor">Select Floor</button>
+    </div>
+
+    <div class="date-picker-content">
+        <div>
+            From Date : <input class="date-picker" type="datetime-local" placeholder="start date" [(ngModel)]="fromDate">
+            To Date : <input class="date-picker" type="datetime-local" placeholder="start date" [(ngModel)]="toDate">
+        </div>
+        
+        <button mat-button color="primary" (click)="onDateSelection()">Submit</button>
+    </div>
+
+    <div class="error" *ngIf="dateError" class="date-error error">
+        {{dateError}}
+    </div>
+
+    <div class="view-container">
+        <div class="media-player-container">
+            <div class="media-player">
+                <media-player></media-player>
+            </div>
+        
+            <div class="player-control">
+                <mat-slider #slider [min]="min" [disabled]="isDisabled" [max]="max" [step]="step" showTickMarks discrete>
+                    <input matSliderThumb>
+                </mat-slider>
+            </div>
+        </div>
+
+        <div class="action-list">
+            <span>Action List</span>
+
+            <mat-selection-list #list [multiple]="false">
+                <mat-list-option class="options" *ngFor="let list of action_list" [value]="list">
+                  {{list}}
+                </mat-list-option>
+              </mat-selection-list>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="selection-content">
+        {{mediaPlayerPosition(slider.value)}}
+    </div>
+
+
+
+
+</div>
