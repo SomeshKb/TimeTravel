@@ -140,7 +140,7 @@ export class SceneService {
           this.mixers.push(mixer);
 
           const action = mixer.clipAction(animation);
-          // action.play();
+          action.play();
         }
         this.scene.add(model);
 
