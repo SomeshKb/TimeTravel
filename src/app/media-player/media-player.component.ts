@@ -1,12 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Vector3, Euler } from 'three';
 import { SceneService } from '../scene.service';
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import { data } from './data';
+import { Subscription, Observable } from 'rxjs';
 
 type ACTION = {
-  ACTION_NAME : string,
-  ACTOR : string,
+  ACTION_NAME: string,
+  ACTOR: string,
   TIME: Date,
   LOCATION: string,
 }
@@ -16,38 +17,38 @@ type ACTION = {
   templateUrl: './media-player.component.html',
   styleUrls: ['./media-player.component.scss']
 })
-export class MediaPlayerComponent implements OnInit, AfterViewInit{
+export class MediaPlayerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('container')
-  set container(container: ElementRef) {
-      this.sceneService.initialize(container.nativeElement);
-  }
-
-  
+  container!: ElementRef;
   modelData = data;
+  eventsSubscription: Subscription | undefined;
+
+  selected : boolean = false;
+
+  @Input() events: Observable<void> = new Observable() ;
 
   constructor(@Inject(SceneService) private sceneService: SceneService, private renderer: Renderer2) { }
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    console.log("TO")
+    this.eventsSubscription = this.events.subscribe(() => {
+    this.sceneService.initialize(this.container.nativeElement);
     this.generateModel();
     document.body.appendChild( VRButton.createButton( this.sceneService.renderer) );
     this.sceneService.renderer.xr.enabled = true;
+    this.selected = true
+    });
+  }
+
+  ngAfterViewInit(): void {
   }
 
   generateModel() {
     this.modelData.map(x => {
-
-      console.log(x);
       switch (x.id) {
         case "kuka": {
           this.sceneService.createModels("assets/kuka.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Kuka Robot", "kuka").then(model => {
-            // this.models.push(model as Object3D);
             this.sceneService.transformControls.detach();
-            // this.sceneService.gridHelper.remove();
             this.sceneService.orbitControls.enabled = true;
           }).catch(err => {
             console.log(err);
@@ -56,18 +57,14 @@ export class MediaPlayerComponent implements OnInit, AfterViewInit{
 
         case "plane": {
           const model = this.sceneService.createPlane(new Vector3(x.position.x, x.position.y, x.position.z), new Euler(x.rotation.x, x.rotation.y, x.rotation.z), new Vector3(x.scale.x, x.scale.y, x.scale.z));
-          // this.models.push(this.model as Object3D);
           this.sceneService.transformControls.detach();
-          // this.sceneService.gridHelper.remove();
           this.sceneService.orbitControls.enabled = true;
           console.log(this.sceneService.scene)
         } break;
 
         case "conveyor": {
-          this.sceneService.createModels("assets/conveyor.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Conveyor", "conveyor", new Euler(x.rotation.x,x.rotation.y,x.rotation.z, 'XYZ')).then(model => {
-            // this.models.push(model as Object3D);
+          this.sceneService.createModels("assets/conveyor.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Conveyor", "conveyor", new Euler(x.rotation.x, x.rotation.y, x.rotation.z, 'XYZ')).then(model => {
             this.sceneService.transformControls.detach();
-            // this.sceneService.gridHelper.remove();
             this.sceneService.orbitControls.enabled = true;
           }).catch(err => {
             console.log(err);
@@ -75,10 +72,8 @@ export class MediaPlayerComponent implements OnInit, AfterViewInit{
         }; break;
 
         case "conveyor2": {
-          this.sceneService.createModels("assets/conveyor2.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Curved Conveyor", "conveyor2", new Euler(x.rotation.x,x.rotation.y,x.rotation.z, 'XYZ')).then(model => {
-            // this.models.push(model as Object3D);
+          this.sceneService.createModels("assets/conveyor2.glb", new Vector3(x.position.x, x.position.y, x.position.z), new Vector3(x.scale.x, x.scale.y, x.scale.z), "Curved Conveyor", "conveyor2", new Euler(x.rotation.x, x.rotation.y, x.rotation.z, 'XYZ')).then(model => {
             this.sceneService.transformControls.detach();
-            // this.sceneService.gridHelper.remove();
             this.sceneService.orbitControls.enabled = true;
           }).catch(err => {
             console.log(err);
@@ -90,4 +85,7 @@ export class MediaPlayerComponent implements OnInit, AfterViewInit{
     })
   }
 
+  ngOnDestroy() {
+    this.eventsSubscription?.unsubscribe();
+  }
 }

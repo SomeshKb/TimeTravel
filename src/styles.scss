@@ -6,7 +6,6 @@ $secondaryColor : #212A3E;
 $lightColor : #F1F6F9;
 $textColor : #F1F6F9;
 $borderColor : #2f85b39d;
-
 html,
 body {
     height: 100%;
@@ -25,8 +24,36 @@ body {
     color: rgb(126, 126, 126);
 }
 
+.mat-slider-ticks-container{
+    background-color: white;
+}
+
+.mat-slider.mat-slider-min-value:not(.mat-slider-thumb-label-showing) .mat-slider-thumb{
+    background-color: white;
+}
+
 .error {
     color: red;
+}
+
+.custom-form-control{
+    color: white;
+}
+
+.mat-form-field-label {
+    color: white !important;
+ } 
+
+ .mat-form-field-appearance-legacy .mat-form-field-underline{
+    color: $borderColor;
+ }
+
+.mat-select-value{
+    color: white;
+}
+
+.mat-select-arrow {
+color: white !important;
 }
 
 .mat-slider-disabled {
@@ -89,14 +116,15 @@ body {
             }
         }
     }
+    
 
     .date-picker-content {
         margin: 10px;
-        width: 95%;
+        width: 85%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: baseline;
 
         .picker-label {
             color: $textColor;
@@ -169,11 +197,17 @@ body {
     display: flex;
     color: $textColor;
     font-size: 25px;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .mat-icon {
+            margin-left: 2%;
+            cursor: pointer;
+    }
 
     span {
-        margin-left: 2%;
+        margin-left: 25px;
     }
 }
 #VRButton {

@@ -1,21 +1,33 @@
 <div class="header">
+    <mat-icon [routerLink]="'/'">home</mat-icon>
     <span>EXPLORE FUTURE</span>
 </div>
 
 <div class="container">
-    <div class="selection-tab">
-        <button mat-button color="primary" class="select-workshop">Select Workshop</button>
-        <button mat-button color="primary" class="select-floor">Select Floor</button>
-    </div>
-
     <div class="date-picker-content">
-        <div>
-            <span class="picker-label"> Date : <input class="date-picker" type="datetime-local" placeholder="start date"
-                    [(ngModel)]="fromDate"></span>
-            <span class="picker-label"> To Date : <input class="date-picker" type="datetime-local"
-                    placeholder="start date" [(ngModel)]="toDate"></span>
-        </div>
+        <mat-form-field class="custom-form-control">
+            <mat-label>Select Factory</mat-label>
+            <mat-select>
+                <mat-option [value]="'Factory 1'">Factory 1</mat-option>
+                <mat-option [value]="'Factory 2'">Factory 2</mat-option>
+                <mat-option [value]="'Factory 3'">Factory 3</mat-option>
+                <mat-option [value]="'Factory 4'">Factory 4</mat-option>
+            </mat-select>
+        </mat-form-field>
 
+        <mat-form-field>
+            <mat-label>Select Floor</mat-label>
+            <mat-select>
+                <mat-option [value]="'Floor 1'">Floor 1</mat-option>
+                <mat-option [value]="'Floor 2'">Floor 2</mat-option>
+                <mat-option [value]="'Floor 3'">Floor 3</mat-option>
+                <mat-option [value]="'Floor 4'">Floor 4</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <span class="picker-label"> From Date : <input class="date-picker" type="datetime-local"
+                placeholder="start date" [(ngModel)]="fromDate"></span>
+        <span class="picker-label"> To Date : <input class="date-picker" type="datetime-local" placeholder="start date"
+                [(ngModel)]="toDate"></span>
         <button mat-button color="primary" (click)="onDateSelection()">Submit</button>
     </div>
 
@@ -26,14 +38,18 @@
     <div class="view-container">
         <div class="media-player-container">
             <div class="media-player">
-                <media-player></media-player>
+                <media-player [events]="eventsSubject.asObservable()"></media-player>
+
             </div>
 
             <div class="player-control">
-                <mat-slider #slider [min]="min" [disabled]="isDisabled" [max]="max" [step]="step" showTickMarks
+                <mat-slider #slider [min]="min" [disabled]="isDisabled" [value]="value" [max]="max" [step]="step" showTickMarks
                     discrete>
                     <input matSliderThumb>
                 </mat-slider>
+            </div>
+            <div class="selection-content">
+                {{mediaPlayerPosition(slider.value)}}
             </div>
         </div>
 
@@ -46,8 +62,5 @@
                 </mat-list-option>
             </mat-selection-list>
         </div>
-    </div>
-    <div class="selection-content">
-        {{mediaPlayerPosition(slider.value)}}
     </div>
 </div>

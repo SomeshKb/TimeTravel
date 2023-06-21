@@ -1,27 +1,33 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-present-player',
   templateUrl: './present-player.component.html',
   styleUrls: ['./present-player.component.scss']
 })
-export class PresentPlayerComponent implements OnInit {
+export class PresentPlayerComponent implements OnInit, OnDestroy {
   @ViewChild('slider') matSlider: any;
 
   fromDate: string = "";
   toDate: string = "";
-
   max = 89;
+  value = 0;
   min = 0;
   step = 1;
   isDisabled = true;
-
   dateError = "";
-
-
-  action_list = ["KUKA Robot started", "KUKA Robot moved"]
+  eventsSubject: Subject<void> = new Subject<void>();
+  action_list = ["KUKA Robot started", "KUKA Robot moved"];
+  id : any
 
   constructor() { }
+
+  ngOnDestroy(): void {
+    if (this.id) {
+      clearInterval(this.id);
+    }
+  }
 
   ngOnInit(): void {
   }
@@ -32,6 +38,12 @@ export class PresentPlayerComponent implements OnInit {
     }
 
     return `${value}`;
+  }
+
+  emitEventToChild() {
+    this.eventsSubject.next();
+    this.isDisabled = false;
+    this.startSlider();
   }
 
 
@@ -50,32 +62,19 @@ export class PresentPlayerComponent implements OnInit {
   }
 
   onDateSelection() {
-
-    const min = this.convertToUnixTimestamp(this.fromDate);
-    const max = this.convertToUnixTimestamp(this.toDate);
-
-    if (!min || !min) {
-      this.dateError = "Please select the Date";
-      return;
-    }
-
-    if (max > min) {
-      console.log(this.convertFromUnixTimestamp(min))
-      console.log(this.convertFromUnixTimestamp(max))
-      this.min = min;
-      this.max = max;
-      this.matSlider.value = this.min;
-      this.isDisabled = false;
-      this.dateError = "";
-    } else {
-      this.dateError = "To Date Should be greater the From Date";
-    }
+    this.emitEventToChild();
   }
 
   convertToUnixTimestamp(dateString: string) {
     var dateObject = new Date(dateString);
     var unixTimestamp = Math.round(dateObject.getTime() / 1000);
     return unixTimestamp;
+  }
+
+  startSlider() {
+    this.id = setInterval(() => {
+      this.value = this.value+1;
+    }, 1000);
   }
 
 }

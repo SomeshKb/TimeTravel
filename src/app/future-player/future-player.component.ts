@@ -1,30 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-future-player',
   templateUrl: './future-player.component.html',
   styleUrls: ['./future-player.component.scss']
 })
-export class FuturePlayerComponent implements OnInit {
+export class FuturePlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('slider') matSlider: any;
 
   fromDate: string = "";
   toDate: string = "";
-
   max = 89;
   min = 0;
   step = 1;
-  isDisabled = true;
+  value = 0;
+  isDisabled = false;
+  id: any
 
   dateError = "";
 
 
-  action_list = ["ABC", "KUKA Robot moved"]
+  action_list = ["Kuka Robot Started", "KUKA Robot moved"]
+  eventsSubject: Subject<void> = new Subject<void>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    if (this.id) {
+      clearInterval(this.id);
+    }
   }
 
   formatLabel(value: number): string {
@@ -41,6 +50,11 @@ export class FuturePlayerComponent implements OnInit {
       return "- -";
     }
     return this.convertFromUnixTimestamp(unixTimestamp)
+  }
+  
+  emitEventToChild() {
+    this.eventsSubject.next();
+    this.startSlider();
   }
 
   convertFromUnixTimestamp(unixTimestamp: number): string {
@@ -65,12 +79,21 @@ export class FuturePlayerComponent implements OnInit {
       console.log(this.convertFromUnixTimestamp(max))
       this.min = min;
       this.max = max;
+      this.value = min;
       this.matSlider.value = this.min;
       this.isDisabled = false;
       this.dateError = "";
+      this.emitEventToChild();
     } else {
       this.dateError = "To Date Should be greater the From Date";
+      return;
     }
+  }
+
+  startSlider() {
+    this.id = setInterval(() => {
+      this.value = this.value + 5;
+    }, 1000);
   }
 
   convertToUnixTimestamp(dateString: string) {

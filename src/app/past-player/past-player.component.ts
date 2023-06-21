@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-past-player',
   templateUrl: './past-player.component.html',
   styleUrls: ['./past-player.component.scss']
 })
-export class PastPlayerComponent implements OnInit {
+export class PastPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('slider') matSlider: any;
 
@@ -15,14 +16,27 @@ export class PastPlayerComponent implements OnInit {
   max = 89;
   min = 0;
   step = 1;
-  isDisabled = true;
+  isDisabled = false;
+  value = 0;
 
   dateError = "";
-
-
-  action_list = ["KUKA Robot started", "KUKA Robot moved"]
+  action_list = ["KUKA Robot started", "KUKA Robot moved"];
+  eventsSubject: Subject<void> = new Subject<void>();
+  id: any;
 
   constructor() { }
+
+  ngOnDestroy(): void {
+    if (this.id) {
+      clearInterval(this.id);
+    }
+  }
+
+  startSlider() {
+    this.id = setInterval(() => {
+      this.value = this.value + 5;
+    }, 1000);
+  }
 
   ngOnInit(): void {
   }
@@ -41,6 +55,11 @@ export class PastPlayerComponent implements OnInit {
       return "- -";
     }
     return this.convertFromUnixTimestamp(unixTimestamp)
+  }
+
+  emitEventToChild() {
+    this.startSlider();
+    this.eventsSubject.next();
   }
 
   convertFromUnixTimestamp(unixTimestamp: number): string {
@@ -65,9 +84,11 @@ export class PastPlayerComponent implements OnInit {
       console.log(this.convertFromUnixTimestamp(max))
       this.min = min;
       this.max = max;
+      this.value = min;
       this.matSlider.value = this.min;
       this.isDisabled = false;
       this.dateError = "";
+      this.emitEventToChild();
     } else {
       this.dateError = "To Date Should be greater the From Date";
     }
