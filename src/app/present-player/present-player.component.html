@@ -6,12 +6,12 @@
 <div class="container">
     <div class="selection-tab">
         <mat-form-field class="custom-form-control">
-            <mat-label>Select Factory</mat-label>
+            <mat-label>Select WorkShop</mat-label>
             <mat-select>
-                <mat-option [value]="'Factory 1'">Factory 1</mat-option>
-                <mat-option [value]="'Factory 2'">Factory 2</mat-option>
-                <mat-option [value]="'Factory 3'">Factory 3</mat-option>
-                <mat-option [value]="'Factory 4'">Factory 4</mat-option>
+                <mat-option [value]="'WorkShop 1'">WorkShop 1</mat-option>
+                <mat-option [value]="'WorkShop 2'">WorkShop 2</mat-option>
+                <mat-option [value]="'WorkShop 3'">WorkShop 3</mat-option>
+                <mat-option [value]="'WorkShop 4'">WorkShop 4</mat-option>
             </mat-select>
         </mat-form-field>
 
@@ -34,16 +34,16 @@
                                 <media-player [events]="eventsSubject.asObservable()"></media-player>
             </div>
 
-            <div class="player-control">
+            <!-- <div class="player-control">
                 <mat-slider #slider [min]="min" [disabled]="isDisabled" [max]="max" [step]="step" [value]="value" showTickMarks
                     discrete>
                     <input matSliderThumb>
                 </mat-slider>
-            </div>
+            </div> -->
         </div>
 
         <div class="action-list">
-            <span>Action List</span>
+            <span>Events List</span>
 
             <mat-selection-list #list [multiple]="false">
                 <mat-list-option class="options" *ngFor="let list of action_list" [value]="list">
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <div class="selection-content">
+    <!-- <div class="selection-content">
         {{mediaPlayerPosition(slider.value)}}
-    </div>
+    </div> -->
 </div>
