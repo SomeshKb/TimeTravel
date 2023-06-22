@@ -18,7 +18,7 @@ export class PresentPlayerComponent implements OnInit, OnDestroy {
   isDisabled = true;
   dateError = "";
   eventsSubject: Subject<void> = new Subject<void>();
-  action_list = ["KUKA Robot started", "KUKA Robot moved"];
+  action_list : string[] = [];
   id : any
 
   constructor() { }
@@ -72,6 +72,7 @@ export class PresentPlayerComponent implements OnInit, OnDestroy {
   }
 
   startSlider() {
+    this.action_list =["KUKA Robot started", "KUKA Robot moved"];
     this.id = setInterval(() => {
       this.value = this.value+1;
     }, 1000);

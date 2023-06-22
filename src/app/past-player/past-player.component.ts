@@ -20,7 +20,7 @@ export class PastPlayerComponent implements OnInit, OnDestroy {
   value = 0;
 
   dateError = "";
-  action_list = ["KUKA Robot started", "KUKA Robot moved"];
+  action_list: string[] = [];
   eventsSubject: Subject<void> = new Subject<void>();
   id: any;
 
@@ -33,6 +33,14 @@ export class PastPlayerComponent implements OnInit, OnDestroy {
   }
 
   startSlider() {
+    this.action_list = ["Operator Interacted with control panel",
+      "KUKA Robot started",
+      "Operator moved away from the control panel",
+      "KUKA Robot arm moved towards the conveyer belt",
+      "KUKA Robot inspected item id ### and accepted it",
+      "KUKA Robot inspected item id ### and accepted it",
+      "KUKA Robot inspected item id ### and rejected it"
+    ];
     this.id = setInterval(() => {
       this.value = this.value + 5;
     }, 1000);

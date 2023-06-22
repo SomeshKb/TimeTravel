@@ -22,7 +22,7 @@ export class FuturePlayerComponent implements OnInit, OnDestroy {
   dateError = "";
 
 
-  action_list = ["Kuka Robot Started", "KUKA Robot moved"]
+  action_list: string[] = [];
   eventsSubject: Subject<void> = new Subject<void>();
 
   constructor() { }
@@ -51,7 +51,7 @@ export class FuturePlayerComponent implements OnInit, OnDestroy {
     }
     return this.convertFromUnixTimestamp(unixTimestamp)
   }
-  
+
   emitEventToChild() {
     this.eventsSubject.next();
     this.startSlider();
@@ -91,6 +91,7 @@ export class FuturePlayerComponent implements OnInit, OnDestroy {
   }
 
   startSlider() {
+    this.action_list = ["Configuration can be changed to allow 20 items per second", "KUKA Robot end of life in next 5 month"]
     this.id = setInterval(() => {
       this.value = this.value + 5;
     }, 1000);
